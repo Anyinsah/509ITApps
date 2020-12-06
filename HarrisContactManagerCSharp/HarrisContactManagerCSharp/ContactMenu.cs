@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace HarrisContactManagerCSharp
 {
-    public partial class Form1 : Form
+    public partial class ContactMenu : Form
     {
-        public Form1()
+        public ContactMenu()
         {
             InitializeComponent();
         }
