@@ -11,7 +11,7 @@ namespace HarrisContactManagerCSharp
         public int BusinessID { get; set; }
         public string bName { get; set; }
         public string bEmail { get; set; }
-        public int bNumber { get; set; }
+        public string bNumber { get; set; }
 
     }
 }

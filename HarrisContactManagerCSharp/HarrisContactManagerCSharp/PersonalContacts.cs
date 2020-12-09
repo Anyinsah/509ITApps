@@ -8,7 +8,7 @@ namespace HarrisContactManagerCSharp
 {
     public class PersonalContacts : Contact
     {
-        public int pContactTel { get; set; }
+        public string pContactTel { get; set; }
         public string pAddress1 { get; set; }
         public string pAddress2 {get; set;}
         public string pCity { get; set; }

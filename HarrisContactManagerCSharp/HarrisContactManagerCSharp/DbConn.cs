@@ -36,8 +36,8 @@ namespace HarrisContactManagerCSharp
                                 cFirstName = reader.GetString(1),
                                 cSecondName = reader.GetString(2),
                                 cEmail = reader.GetString(3),
-                                cContactTel = reader.GetInt32(4),
-                                pContactTel = reader.GetInt32(5),
+                                cContactTel = reader.GetString(4),
+                                pContactTel = reader.GetString(5),
                                 pAddress1 = reader.GetString(6),
                                 pAddress2 = reader.GetString(7),
                                 pCity = reader.GetString(8),
@@ -53,7 +53,7 @@ namespace HarrisContactManagerCSharp
 
                 dtPersonalContacts.Columns.Add("ContactID");
                 dtPersonalContacts.Columns.Add("cFirstName");
-                dtPersonalContacts.Columns.Add("cSeconName");
+                dtPersonalContacts.Columns.Add("cSecondName");
                 dtPersonalContacts.Columns.Add("cEmail");
                 dtPersonalContacts.Columns.Add("cContactTel");
                 dtPersonalContacts.Columns.Add("pContactTel");
@@ -86,11 +86,11 @@ namespace HarrisContactManagerCSharp
 
             }
 
-        public void insertPContacts(PersonalContacts personalContact)
+        public async void insertPContacts(PersonalContacts personalContact)
         {
             using (var conn = new MySqlConnection(sConn))
             {
-                conn.Open();
+                await conn.OpenAsync();
                 using (var callCommand = new MySqlCommand())
                 {
                     callCommand.Connection = conn;
@@ -104,17 +104,17 @@ namespace HarrisContactManagerCSharp
                     callCommand.Parameters.AddWithValue("p7", personalContact.pAddress2);
                     callCommand.Parameters.AddWithValue("p8", personalContact.pCity);
                     callCommand.Parameters.AddWithValue("p9", personalContact.aPostCode);
-                    callCommand.ExecuteNonQuery();
+                    await callCommand.ExecuteNonQueryAsync();
                 }
 
             }
         }
 
-        public void updatePContacts(PersonalContacts personalContact)
+        public async void updatePContacts(PersonalContacts personalContact)
         {
             using (var conn = new MySqlConnection(sConn))
             {
-                conn.Open();
+                await conn.OpenAsync();
                 using (var callCommand = new MySqlCommand())
                 {
                     callCommand.Connection = conn;
@@ -128,23 +128,23 @@ namespace HarrisContactManagerCSharp
                     callCommand.Parameters.AddWithValue("p7", personalContact.pAddress1);
                     callCommand.Parameters.AddWithValue("p8", personalContact.pAddress2);
                     callCommand.Parameters.AddWithValue("p9", personalContact.pCity);
-                    callCommand.Parameters.AddWithValue("p9", personalContact.aPostCode);
-                    callCommand.ExecuteNonQuery();
+                    callCommand.Parameters.AddWithValue("p10", personalContact.aPostCode);
+                    await callCommand.ExecuteNonQueryAsync();
                 }
 
             }
         }
-        public void deletePContacts(int ID)
+        public async void deletePContacts(int ID)
         {
             using (var conn = new MySqlConnection(sConn))
             {
-                conn.Open();
+                await conn.OpenAsync();
                 using (var callCommand = new MySqlCommand())
                 {
                     callCommand.Connection = conn;
                     callCommand.CommandText = "CALL deletePersonalContacts(@p1);";
                     callCommand.Parameters.AddWithValue("p1", ID);
-                    callCommand.ExecuteNonQuery();
+                    await callCommand.ExecuteNonQueryAsync();
                 }
 
             }
@@ -158,7 +158,7 @@ namespace HarrisContactManagerCSharp
                 conn.Open();
                 DataTable dtBusinessContacts = new DataTable();
                 List<BusinessContacts> bContact = new List<BusinessContacts>();
-                using (var callCommand = new MySqlCommand("CALL selectBusinessContacts9();", conn))
+                using (var callCommand = new MySqlCommand("CALL selectBusinessContacts();", conn))
                 {
                     using (var reader = callCommand.ExecuteReader())
                     {
@@ -169,13 +169,13 @@ namespace HarrisContactManagerCSharp
                                 BusinessID = reader.GetInt32(0),
                                 bName = reader.GetString(1),
                                 bEmail = reader.GetString(2),
-                                bNumber = reader.GetInt32(3)
+                                bNumber = reader.GetString(3)
                             });
                         }
                     }
 
                 }
-                dtBusinessContacts.Columns.Add("ContactID");
+                dtBusinessContacts.Columns.Add("BusinessID");
                 dtBusinessContacts.Columns.Add("bName");
                 dtBusinessContacts.Columns.Add("bEmail");
                 dtBusinessContacts.Columns.Add("bNumber");
@@ -193,8 +193,65 @@ namespace HarrisContactManagerCSharp
 
                 return dtBusinessContacts;
             }
+
                 
         }
+        public async void insertBContacts(BusinessContacts businessContacts)
+        {
+            using (var conn = new MySqlConnection(sConn))
+            {
+                await conn.OpenAsync();
+                using (var callCommand = new MySqlCommand())
+                {
+                    callCommand.Connection = conn;
+                    callCommand.CommandText = "CALL insertIntoBusiness(@p1,@p2,@p3);";
+                    callCommand.Parameters.AddWithValue("p1", businessContacts.bName);
+                    callCommand.Parameters.AddWithValue("P2", businessContacts.bEmail);
+                    callCommand.Parameters.AddWithValue("p3", businessContacts.bNumber);
+                    await callCommand.ExecuteNonQueryAsync();
+                }
+
+            }
+        }
+
+        public async void updateBContacts(BusinessContacts businessContacts)
+        {
+
+            using (var conn = new MySqlConnection(sConn))
+            {
+                await conn.OpenAsync();
+                using (var callCommand = new MySqlCommand())
+                {
+                    callCommand.Connection = conn;
+                    callCommand.CommandText = "CALL updateBusinessContacts(@p1,@p2,@p3,@p4);";
+                    callCommand.Parameters.AddWithValue("p1", businessContacts.BusinessID);
+                    callCommand.Parameters.AddWithValue("p2", businessContacts.bName);
+                    callCommand.Parameters.AddWithValue("P3", businessContacts.bEmail);
+                    callCommand.Parameters.AddWithValue("p4", businessContacts.bNumber);
+                    await callCommand.ExecuteNonQueryAsync();
+                }
+
+            }
+
+        }
+        public async void deleteBContacts(int ID)
+        {
+
+            using (var conn = new MySqlConnection(sConn))
+            {
+                await conn.OpenAsync();
+                using (var callCommand = new MySqlCommand())
+                {
+                    callCommand.Connection = conn;
+                    callCommand.CommandText = "CALL deleteBusinessContacts(@p1);";
+                    callCommand.Parameters.AddWithValue("p1", ID);
+                    await callCommand.ExecuteNonQueryAsync();
+                }
+
+            }
+
+        }
+
 
         }
 

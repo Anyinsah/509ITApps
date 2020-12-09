@@ -16,5 +16,21 @@ namespace HarrisContactManagerCSharp
         {
             InitializeComponent();
         }
+
+        private void pContactsButton_Click(object sender, EventArgs e)
+        {
+            ContactMenu cMenu = new ContactMenu();
+            PersonalEditor pEditor = new PersonalEditor();
+            pEditor.Show();
+            cMenu.Close();
+        }
+
+        private void bContactsButton_Click(object sender, EventArgs e)
+        {
+            ContactMenu cMenu = new ContactMenu();
+            BusinessEditor bEditor = new BusinessEditor();
+            bEditor.Show();
+            cMenu.Close();
+        }
     }
 }

@@ -13,7 +13,7 @@ namespace HarrisContactManagerCSharp
         public String cSecondName { get; set; }
         public String cEmail { get; set; }
 
-        public int cContactTel { get; set; }
+        public string cContactTel { get; set; }
  
     }
 }

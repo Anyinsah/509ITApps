@@ -66,16 +66,38 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BusinessContacts.cs" />
+    <Compile Include="BusinessEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="BusinessEditor.Designer.cs">
+      <DependentUpon>BusinessEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Contact.cs" />
     <Compile Include="ContactMenu.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ContactMenu.Designer.cs">
       <DependentUpon>ContactMenu.cs</DependentUpon>
     </Compile>
+    <Compile Include="DbConn.cs" />
+    <Compile Include="PersonalContacts.cs" />
+    <Compile Include="PersonalEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PersonalEditor.Designer.cs">
+      <DependentUpon>PersonalEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="BusinessEditor.resx">
+      <DependentUpon>BusinessEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ContactMenu.resx">
       <DependentUpon>ContactMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PersonalEditor.resx">
+      <DependentUpon>PersonalEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
