@@ -11,6 +11,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -237,10 +238,19 @@ public class BusinessEditor extends JFrame {
 		btnDelete.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) 
-			{
-				String id = bContactsDataTable.getValueAt(bContactsDataTable.getSelectedRow(), 0).toString();
-				DbConn.deleteBContacts(id);
-				bContactsDataTable.setModel(DbUtils.resultSetToTableModel(DbConn.getBContacts()));
+			{	
+				Object[] options = {"Yes", "No"};
+				int result = JOptionPane.showOptionDialog(null, "Are you sure you want to delete this row with ID: " + bContactsDataTable.getValueAt(bContactsDataTable.getSelectedRow(), 0), "Delete Warning", JOptionPane.YES_NO_OPTION,JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+				if (result == 0)
+				{
+					
+					String id = bContactsDataTable.getValueAt(bContactsDataTable.getSelectedRow(), 0).toString();
+					DbConn.deleteBContacts(id);
+					bContactsDataTable.setModel(DbUtils.resultSetToTableModel(DbConn.getBContacts()));
+					JOptionPane.showMessageDialog(null, "Row Deleted Succesfully!", "Delete Confirmation", JOptionPane.YES_NO_OPTION);
+
+				}
+				
 			}
 		});
 		

@@ -19,6 +19,8 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -27,7 +29,6 @@ import java.awt.event.WindowEvent;
 public class PersonalEditor extends JFrame {
 
 	private JPanel contentPane;
-	private JTable pContactsDataTable;
 	private JTextField fname_textfield;
 	private JTextField pnumber_textfield;
 	private JTextField sname_textfield;
@@ -37,6 +38,7 @@ public class PersonalEditor extends JFrame {
 	private JTextField cnumber_textfield;
 	private JTextField city_textfield;
 	private JTextField postcode_textfield;
+	private JTable pContactsDataTable;
 
 	/**
 	 * Launch the application.
@@ -145,8 +147,27 @@ public class PersonalEditor extends JFrame {
 		JButton btnAddNew = new JButton("Add New");
 		
 		JButton btnRefresh = new JButton("Refresh");
+		pContactsDataTable = new JTable();
 		
-		// Event handlers - Couldn't define or call buttons on the override. Created messy code blocks.
+		// Event Handlers for Buttons and Data Table
+		
+		pContactsDataTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				fname_textfield.setText(pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 1).toString());
+				sname_textfield.setText(pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 2).toString());
+				email_textfield.setText(pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 3).toString());
+				cnumber_textfield.setText(pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 4).toString());
+				pnumber_textfield.setText(pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 5).toString());
+				faddress_textfield.setText(pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 6).toString());
+				saddress_textfield.setText(pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 7).toString());
+				city_textfield.setText(pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 8).toString());
+				postcode_textfield.setText(pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 9).toString());
+				
+			}
+		});
+		
 		
 		
 		
@@ -251,6 +272,7 @@ public class PersonalEditor extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) 
 			{
+				btnUpdateSelected.setEnabled(false);
 				btnAddNew.setEnabled(false);
 				btnSaveNew.setEnabled(false);
 				btnDelete.setEnabled(false);
@@ -265,7 +287,6 @@ public class PersonalEditor extends JFrame {
 				saddress_textfield.setEnabled(true);
 				city_textfield.setEnabled(true);
 				postcode_textfield.setEnabled(true);
-				pContactsDataTable.setModel(DbUtils.resultSetToTableModel(DbConn.getPContacts()));
 			}
 		});
 		
@@ -336,12 +357,21 @@ public class PersonalEditor extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) 
 			{
-				String id = (String) pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 0).toString();
-				DbConn.deletePConacts(id);
-				pContactsDataTable.setModel(DbUtils.resultSetToTableModel(DbConn.getPContacts()));
+				Object[] options = {"Yes","No"};
+				int result = JOptionPane.showOptionDialog(null, "Are you sure you want to delete row with ID: " + pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 0), "Warning", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+				if (result == 0) 
+				{
+					String id = (String) pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 0).toString();
+					DbConn.deletePConacts(id);
+					pContactsDataTable.setModel(DbUtils.resultSetToTableModel(DbConn.getPContacts()));
+					JOptionPane.showMessageDialog(null, "Row Deleted Succesfully!", "Delete Confirmation", JOptionPane.YES_NO_OPTION);
+				}
 			}
+			
+		
+			
 		});
-
+		
 		
 		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
@@ -350,7 +380,7 @@ public class PersonalEditor extends JFrame {
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 698, Short.MAX_VALUE)
+						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 850, Short.MAX_VALUE)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 								.addComponent(fname_label)
@@ -375,26 +405,24 @@ public class PersonalEditor extends JFrame {
 									.addComponent(city_label)))
 							.addGap(18)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(faddress_textfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 								.addGroup(gl_contentPane.createSequentialGroup()
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-										.addGroup(gl_contentPane.createSequentialGroup()
-											.addComponent(pnumber_textfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-											.addPreferredGap(ComponentPlacement.UNRELATED)
-											.addComponent(postcode_label))
-										.addComponent(saddress_textfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addComponent(city_textfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-									.addGap(18)
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-										.addComponent(btnSaveSelected, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
-										.addComponent(postcode_textfield, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
-										.addComponent(btnUpdateSelected, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE))
-									.addPreferredGap(ComponentPlacement.RELATED)
-									.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-										.addComponent(btnRefresh, GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
-										.addComponent(btnDelete, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-										.addComponent(btnAddNew, GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
-										.addComponent(btnSaveNew, GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE))))))
+									.addComponent(pnumber_textfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addPreferredGap(ComponentPlacement.UNRELATED)
+									.addComponent(postcode_label))
+								.addComponent(saddress_textfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(city_textfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(faddress_textfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+							.addGap(18)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+								.addComponent(btnUpdateSelected, GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
+								.addComponent(btnSaveSelected, GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE)
+								.addComponent(postcode_textfield, GroupLayout.DEFAULT_SIZE, 209, Short.MAX_VALUE))
+							.addPreferredGap(ComponentPlacement.RELATED)
+							.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
+								.addComponent(btnRefresh, GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
+								.addComponent(btnDelete, GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
+								.addComponent(btnAddNew, GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE)
+								.addComponent(btnSaveNew, GroupLayout.DEFAULT_SIZE, 165, Short.MAX_VALUE))))
 					.addContainerGap())
 		);
 		gl_contentPane.setVerticalGroup(
@@ -443,24 +471,6 @@ public class PersonalEditor extends JFrame {
 					.addPreferredGap(ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
 					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 186, GroupLayout.PREFERRED_SIZE))
 		);
-		
-		pContactsDataTable = new JTable();
-		pContactsDataTable.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) 
-			{
-				fname_textfield.setText(pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 1).toString());
-				sname_textfield.setText(pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 2).toString());
-				email_textfield.setText(pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 3).toString());
-				cnumber_textfield.setText(pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 4).toString());
-				pnumber_textfield.setText(pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 5).toString());
-				faddress_textfield.setText(pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 6).toString());
-				saddress_textfield.setText(pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 7).toString());
-				city_textfield.setText(pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 8).toString());
-				postcode_textfield.setText(pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 9).toString());
-				
-			}
-		});
 		
 
 		scrollPane.setViewportView(pContactsDataTable);

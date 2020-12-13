@@ -145,7 +145,7 @@ public class DbConn {
 			CallableStatement callStatement = conn.prepareCall(sql);
 			callStatement.setString(1, bName);
 			callStatement.setString(2,  bEmail);
-			callStatement.setString(3, bName);
+			callStatement.setString(3, bNumber);
 			ResultSet setResult = callStatement.executeQuery();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block

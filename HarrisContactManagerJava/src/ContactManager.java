@@ -50,6 +50,15 @@ public class ContactManager {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
+		btnPersonalContacts.setBounds(65, 126, 126, 23);
+		menuFrame.getContentPane().add(btnPersonalContacts);
+		
+		JButton btnBusinessContacts = new JButton("Business Contacts");
+		btnBusinessContacts.setBounds(230, 126, 135, 23);
+		menuFrame.getContentPane().add(btnBusinessContacts);
+		
+		// Event Handlers
+		
 		btnPersonalContacts.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) 
@@ -59,11 +68,20 @@ public class ContactManager {
 				menuFrame.dispose();
 			}
 		});
-		btnPersonalContacts.setBounds(65, 126, 126, 23);
-		menuFrame.getContentPane().add(btnPersonalContacts);
 		
-		JButton btnBusinessContacts = new JButton("Business Contacts");
-		btnBusinessContacts.setBounds(230, 126, 135, 23);
-		menuFrame.getContentPane().add(btnBusinessContacts);
+		btnBusinessContacts.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				BusinessEditor bEditor = new BusinessEditor();
+				bEditor.setVisible(true);
+				menuFrame.dispose();
+			}
+		});
+		
 	}
+	
+	
+	
 }
+
