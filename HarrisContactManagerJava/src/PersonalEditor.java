@@ -4,30 +4,39 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
+
+import net.proteanit.sql.DbUtils;
+
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import java.awt.Color;
+import java.awt.Component;
+
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JTextField;
 import javax.swing.JLabel;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 public class PersonalEditor extends JFrame {
 
 	private JPanel contentPane;
-	private JTable table;
-	private JTextField textField;
-	private JTextField textField_1;
-	private JTextField textField_2;
-	private JTextField textField_3;
-	private JTextField textField_4;
-	private JTextField textField_5;
-	private JTextField textField_6;
-	private JTextField textField_9;
-	private JTextField textField_7;
+	private JTable pContactsDataTable;
+	private JTextField fname_textfield;
+	private JTextField pnumber_textfield;
+	private JTextField sname_textfield;
+	private JTextField faddress_textfield;
+	private JTextField email_textfield;
+	private JTextField saddress_textfield;
+	private JTextField cnumber_textfield;
+	private JTextField city_textfield;
+	private JTextField postcode_textfield;
 
 	/**
 	 * Launch the application.
@@ -49,71 +58,292 @@ public class PersonalEditor extends JFrame {
 	 * Create the frame.
 	 */
 	public PersonalEditor() {
+		
+		DbConn DbConn = new DbConn();
+		
+		addWindowListener(new WindowAdapter() {
+			// Event handler for when form loads.
+			public void windowOpened(WindowEvent e) 
+			{
+				pContactsDataTable.setModel(DbUtils.resultSetToTableModel(DbConn.getPContacts()));
+			}
+		});
 		setTitle("Personal Contact Editor");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 744, 386);
+		setBounds(100, 100, 896, 386);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
 		
 		JScrollPane scrollPane = new JScrollPane();
+
 		
-		textField = new JTextField();
-		textField.setColumns(10);
 		
-		textField_1 = new JTextField();
-		textField_1.setColumns(10);
+		fname_textfield = new JTextField();
+		fname_textfield.setEnabled(false);
+		fname_textfield.setColumns(10);
 		
-		textField_2 = new JTextField();
-		textField_2.setColumns(10);
+		pnumber_textfield = new JTextField();
+		pnumber_textfield.setEnabled(false);
+		pnumber_textfield.setColumns(10);
 		
-		textField_3 = new JTextField();
-		textField_3.setColumns(10);
+		sname_textfield = new JTextField();
+		sname_textfield.setEnabled(false);
+		sname_textfield.setColumns(10);
 		
-		textField_4 = new JTextField();
-		textField_4.setColumns(10);
+		faddress_textfield = new JTextField();
+		faddress_textfield.setEnabled(false);
+		faddress_textfield.setColumns(10);
 		
-		textField_5 = new JTextField();
-		textField_5.setColumns(10);
+		email_textfield = new JTextField();
+		email_textfield.setEnabled(false);
+		email_textfield.setColumns(10);
 		
-		textField_6 = new JTextField();
-		textField_6.setColumns(10);
+		saddress_textfield = new JTextField();
+		saddress_textfield.setEnabled(false);
+		saddress_textfield.setColumns(10);
 		
-		JLabel lblNewLabel = new JLabel("First Name");
+		cnumber_textfield = new JTextField();
+		cnumber_textfield.setEnabled(false);
+		cnumber_textfield.setColumns(10);
 		
-		JLabel lblNewLabel_1 = new JLabel("Second Name");
+		JLabel fname_label = new JLabel("First Name");
 		
-		JLabel lblNewLabel_2 = new JLabel("Email");
+		JLabel sname_label = new JLabel("Second Name");
 		
-		JLabel lblNewLabel_3 = new JLabel("Personal Number");
+		JLabel email_label = new JLabel("Email");
 		
-		JLabel lblNewLabel_4 = new JLabel("Address 1");
+		JLabel pnumber_label = new JLabel("Personal Number");
 		
-		JLabel lblNewLabel_5 = new JLabel("Address 2");
+		JLabel faddress_label = new JLabel("Address 1");
 		
-		JLabel lblNewLabel_6 = new JLabel("City");
+		JLabel saddress_label = new JLabel("Address 2");
 		
-		JLabel lblNewLabel_7 = new JLabel("Contact Number");
+		JLabel city_label = new JLabel("City");
 		
-		textField_9 = new JTextField();
-		textField_9.setColumns(10);
+		JLabel cnumber_label = new JLabel("Contact Number");
 		
-		JLabel lblNewLabel_9 = new JLabel("Post Code");
 		
-		textField_7 = new JTextField();
-		textField_7.setColumns(10);
+		city_textfield = new JTextField();
+		city_textfield.setEnabled(false);
+		city_textfield.setColumns(10);
 		
-		JButton btnNewButton = new JButton("Add New");
+		JLabel postcode_label = new JLabel("Post Code");
 		
-		JButton btnNewButton_1 = new JButton("Save New");
+		postcode_textfield = new JTextField();
+		postcode_textfield.setEnabled(false);
+		postcode_textfield.setColumns(10);
 		
-		JButton btnNewButton_2 = new JButton("Delete ");
+		JButton btnDelete = new JButton("Delete ");
+		JButton btnSaveSelected = new JButton("Save Selected");
+		btnSaveSelected.setEnabled(false);
+		JButton btnSaveNew = new JButton("Save New");
 		
-		JButton btnNewButton_3 = new JButton("Refresh");
+		btnSaveNew.setEnabled(false);
+		JButton btnUpdateSelected = new JButton("Update Selected");
 		
-		JButton btnNewButton_4 = new JButton("Update Selected");
+		JButton btnAddNew = new JButton("Add New");
 		
-		JButton btnNewButton_5 = new JButton("Save Selected");
+		JButton btnRefresh = new JButton("Refresh");
+		
+		// Event handlers - Couldn't define or call buttons on the override. Created messy code blocks.
+		
+		
+		
+		btnRefresh.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				
+				pContactsDataTable.setModel(DbUtils.resultSetToTableModel(DbConn.getPContacts()));
+				
+			}
+		});
+		
+		btnAddNew.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				btnAddNew.setEnabled(false);
+				btnSaveNew.setEnabled(true);
+				btnUpdateSelected.setEnabled(false);
+				btnDelete.setEnabled(false);
+				btnSaveSelected.setEnabled(false);
+				fname_textfield.setEnabled(true);
+				sname_textfield.setEnabled(true);
+				email_textfield.setEnabled(true);
+				cnumber_textfield.setEnabled(true);
+				pnumber_textfield.setEnabled(true);
+				faddress_textfield.setEnabled(true);
+				saddress_textfield.setEnabled(true);
+				city_textfield.setEnabled(true);
+				postcode_textfield.setEnabled(true);
+				fname_textfield.setText("");
+				sname_textfield.setText("");
+				email_textfield.setText("");
+				cnumber_textfield.setText("");
+				pnumber_textfield.setText("");
+				faddress_textfield.setText("");
+				saddress_textfield.setText("");
+				city_textfield.setText("");
+				postcode_textfield.setText("");
+				
+				
+				
+
+			}
+		});
+		
+		btnSaveNew.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				btnAddNew.setEnabled(true);
+				btnSaveNew.setEnabled(false);
+				btnDelete.setEnabled(true);
+				btnUpdateSelected.setEnabled(true);
+				btnSaveSelected.setEnabled(false);
+				
+	
+
+				
+				
+				String firstName = fname_textfield.getText();
+				String lastName = sname_textfield.getText();
+				String cEmail = email_textfield.getText();
+				String cNumber = cnumber_textfield.getText();
+				String pNumber = pnumber_textfield.getText();
+				String fAddress = faddress_textfield.getText();
+				String sAddress = saddress_textfield.getText();
+				String city = city_textfield.getText();
+				String postcode = postcode_textfield.getText();
+				
+				
+				DbConn.insertPContacts(firstName,
+						lastName, 
+						cEmail, 
+						cNumber, 
+						pNumber, 
+						fAddress, 
+						sAddress, 
+						city, 
+						postcode);
+				
+				fname_textfield.setEnabled(false);
+				sname_textfield.setEnabled(false);
+				email_textfield.setEnabled(false);
+				cnumber_textfield.setEnabled(false);
+				pnumber_textfield.setEnabled(false);
+				faddress_textfield.setEnabled(false);
+				saddress_textfield.setEnabled(false);
+				city_textfield.setEnabled(false);
+				postcode_textfield.setEnabled(false);
+				pContactsDataTable.setModel(DbUtils.resultSetToTableModel(DbConn.getPContacts()));
+			
+
+				
+			}
+			
+
+		});
+		
+		btnUpdateSelected.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				btnAddNew.setEnabled(false);
+				btnSaveNew.setEnabled(false);
+				btnDelete.setEnabled(false);
+				btnSaveSelected.setEnabled(true);
+				
+				fname_textfield.setEnabled(true);
+				sname_textfield.setEnabled(true);
+				email_textfield.setEnabled(true);
+				cnumber_textfield.setEnabled(true);
+				pnumber_textfield.setEnabled(true);
+				faddress_textfield.setEnabled(true);
+				saddress_textfield.setEnabled(true);
+				city_textfield.setEnabled(true);
+				postcode_textfield.setEnabled(true);
+				pContactsDataTable.setModel(DbUtils.resultSetToTableModel(DbConn.getPContacts()));
+			}
+		});
+		
+		btnSaveSelected.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				btnAddNew.setEnabled(true);
+				btnDelete.setEnabled(true);
+				btnUpdateSelected.setEnabled(true);
+				btnSaveSelected.setEnabled(false);
+				btnSaveNew.setEnabled(false);
+				String firstName = pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 1).toString();
+				String lastName = pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 2).toString();
+				String cEmail = pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 3).toString();
+				String cNumber = pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 4).toString();
+				String pNumber = pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 5).toString();
+				String fAddress = pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 6).toString();
+				String sAddress = pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 7).toString();
+				String city = pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 8).toString();
+				String postcode = pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 9).toString();
+				String id = pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 0).toString();
+				firstName = fname_textfield.getText();
+				lastName = sname_textfield.getText();
+				cEmail = email_textfield.getText();
+				cNumber = cnumber_textfield.getText();
+				pNumber = pnumber_textfield.getText();
+				fAddress = faddress_textfield.getText();
+				sAddress = saddress_textfield.getText();
+				city = city_textfield.getText();
+				postcode = postcode_textfield.getText();
+				
+				DbConn.updatePContacts(
+						firstName, 
+						lastName, 
+						cEmail, 
+						cNumber, 
+						pNumber, 
+						fAddress, 
+						sAddress, 
+						city, 
+						postcode, 
+						id);
+				fname_textfield.setEnabled(false);
+				sname_textfield.setEnabled(false);
+				email_textfield.setEnabled(false);
+				cnumber_textfield.setEnabled(false);
+				pnumber_textfield.setEnabled(false);
+				faddress_textfield.setEnabled(false);
+				saddress_textfield.setEnabled(false);
+				city_textfield.setEnabled(false);
+				postcode_textfield.setEnabled(false);
+				pContactsDataTable.setModel(DbUtils.resultSetToTableModel(DbConn.getPContacts()));
+				
+				fname_textfield.setText("");
+				sname_textfield.setText("");
+				email_textfield.setText("");
+				cnumber_textfield.setText("");
+				pnumber_textfield.setText("");
+				faddress_textfield.setText("");
+				saddress_textfield.setText("");
+				city_textfield.setText("");
+				postcode_textfield.setText("");
+			}
+		});
+		
+		btnDelete.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				String id = (String) pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 0).toString();
+				DbConn.deletePConacts(id);
+				pContactsDataTable.setModel(DbUtils.resultSetToTableModel(DbConn.getPContacts()));
+			}
+		});
+
+		
+		
 		GroupLayout gl_contentPane = new GroupLayout(contentPane);
 		gl_contentPane.setHorizontalGroup(
 			gl_contentPane.createParallelGroup(Alignment.LEADING)
@@ -123,48 +353,48 @@ public class PersonalEditor extends JFrame {
 						.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 698, Short.MAX_VALUE)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblNewLabel)
-								.addComponent(lblNewLabel_1)
-								.addComponent(lblNewLabel_2)
-								.addComponent(lblNewLabel_7))
+								.addComponent(fname_label)
+								.addComponent(sname_label)
+								.addComponent(email_label)
+								.addComponent(cnumber_label))
 							.addGap(26)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 								.addGroup(gl_contentPane.createSequentialGroup()
 									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-										.addComponent(textField_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addComponent(textField_4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+										.addComponent(sname_textfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addComponent(fname_textfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addComponent(email_textfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 									.addGap(18)
 									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-										.addComponent(lblNewLabel_4)
-										.addComponent(lblNewLabel_5)
-										.addComponent(lblNewLabel_3)))
+										.addComponent(faddress_label)
+										.addComponent(saddress_label)
+										.addComponent(pnumber_label)))
 								.addGroup(gl_contentPane.createSequentialGroup()
-									.addComponent(textField_6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addComponent(cnumber_textfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 									.addGap(18)
-									.addComponent(lblNewLabel_6)))
+									.addComponent(city_label)))
 							.addGap(18)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-								.addComponent(textField_3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+								.addComponent(faddress_textfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 								.addGroup(gl_contentPane.createSequentialGroup()
 									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 										.addGroup(gl_contentPane.createSequentialGroup()
-											.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+											.addComponent(pnumber_textfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
 											.addPreferredGap(ComponentPlacement.UNRELATED)
-											.addComponent(lblNewLabel_9))
-										.addComponent(textField_5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-										.addComponent(textField_9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+											.addComponent(postcode_label))
+										.addComponent(saddress_textfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+										.addComponent(city_textfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
 									.addGap(18)
 									.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
-										.addComponent(btnNewButton_5, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
-										.addComponent(textField_7, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
-										.addComponent(btnNewButton_4, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE))
+										.addComponent(btnSaveSelected, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
+										.addComponent(postcode_textfield, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
+										.addComponent(btnUpdateSelected, Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE))
 									.addPreferredGap(ComponentPlacement.RELATED)
 									.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
-										.addComponent(btnNewButton_3, GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
-										.addComponent(btnNewButton_2, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-										.addComponent(btnNewButton, GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
-										.addComponent(btnNewButton_1, GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE))))))
+										.addComponent(btnRefresh, GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
+										.addComponent(btnDelete, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+										.addComponent(btnAddNew, GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE)
+										.addComponent(btnSaveNew, GroupLayout.DEFAULT_SIZE, 89, Short.MAX_VALUE))))))
 					.addContainerGap())
 		);
 		gl_contentPane.setVerticalGroup(
@@ -172,50 +402,68 @@ public class PersonalEditor extends JFrame {
 				.addGroup(gl_contentPane.createSequentialGroup()
 					.addContainerGap()
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(textField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblNewLabel)
-						.addComponent(lblNewLabel_3)
-						.addComponent(textField_1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblNewLabel_9)
-						.addComponent(textField_7, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnNewButton))
+						.addComponent(fname_textfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(fname_label)
+						.addComponent(pnumber_label)
+						.addComponent(pnumber_textfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(postcode_label)
+						.addComponent(postcode_textfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnAddNew))
 					.addPreferredGap(ComponentPlacement.RELATED)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.TRAILING)
 						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-							.addComponent(textField_2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addComponent(lblNewLabel_1)
-							.addComponent(lblNewLabel_4))
+							.addComponent(sname_textfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(sname_label)
+							.addComponent(faddress_label))
 						.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-							.addComponent(textField_3, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-							.addComponent(btnNewButton_1)))
+							.addComponent(faddress_textfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+							.addComponent(btnSaveNew)))
 					.addGap(8)
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-						.addComponent(textField_4, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(lblNewLabel_2)
-						.addComponent(lblNewLabel_5)
-						.addComponent(textField_5, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-						.addComponent(btnNewButton_2)
-						.addComponent(btnNewButton_4))
+						.addComponent(email_textfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(email_label)
+						.addComponent(saddress_label)
+						.addComponent(saddress_textfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addComponent(btnDelete)
+						.addComponent(btnUpdateSelected))
 					.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addGap(12)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.LEADING)
 								.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-									.addComponent(textField_6, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-									.addComponent(lblNewLabel_7)
-									.addComponent(lblNewLabel_6))
-								.addComponent(textField_9, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+									.addComponent(cnumber_textfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+									.addComponent(cnumber_label)
+									.addComponent(city_label))
+								.addComponent(city_textfield, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
 						.addGroup(gl_contentPane.createSequentialGroup()
 							.addPreferredGap(ComponentPlacement.RELATED)
 							.addGroup(gl_contentPane.createParallelGroup(Alignment.BASELINE)
-								.addComponent(btnNewButton_3)
-								.addComponent(btnNewButton_5))))
+								.addComponent(btnRefresh)
+								.addComponent(btnSaveSelected))))
 					.addPreferredGap(ComponentPlacement.RELATED, 25, Short.MAX_VALUE)
 					.addComponent(scrollPane, GroupLayout.PREFERRED_SIZE, 186, GroupLayout.PREFERRED_SIZE))
 		);
 		
-		table = new JTable();
-		scrollPane.setViewportView(table);
+		pContactsDataTable = new JTable();
+		pContactsDataTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				fname_textfield.setText(pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 1).toString());
+				sname_textfield.setText(pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 2).toString());
+				email_textfield.setText(pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 3).toString());
+				cnumber_textfield.setText(pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 4).toString());
+				pnumber_textfield.setText(pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 5).toString());
+				faddress_textfield.setText(pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 6).toString());
+				saddress_textfield.setText(pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 7).toString());
+				city_textfield.setText(pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 8).toString());
+				postcode_textfield.setText(pContactsDataTable.getValueAt(pContactsDataTable.getSelectedRow(), 9).toString());
+				
+			}
+		});
+		
+
+		scrollPane.setViewportView(pContactsDataTable);
 		contentPane.setLayout(gl_contentPane);
 	}
 }
