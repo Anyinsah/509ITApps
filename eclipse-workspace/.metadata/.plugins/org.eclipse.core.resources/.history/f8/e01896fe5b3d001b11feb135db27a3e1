@@ -1,0 +1,244 @@
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+
+import net.proteanit.sql.DbUtils;
+
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+public class BusinessEditor extends JFrame {
+
+	private JPanel contentPane;
+	private JTextField bname_textfield;
+	private JTextField bemail_textfield;
+	private JTextField bnumber_textfield;
+	private JTable bContactsDataTable;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					BusinessEditor frame = new BusinessEditor();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public BusinessEditor() {
+		DbConn DbConn = new DbConn();
+		addWindowListener(new WindowAdapter() {
+			@Override
+			public void windowOpened(WindowEvent e) {
+				bContactsDataTable.setModel(DbUtils.resultSetToTableModel(DbConn.getBContacts()));
+			}
+		});
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 612, 407);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 158, 576, 199);
+		contentPane.add(scrollPane);
+		
+		bContactsDataTable = new JTable();
+		scrollPane.setViewportView(bContactsDataTable);
+		
+		JButton btnAddNew = new JButton("Add New");
+
+		btnAddNew.setBounds(481, 11, 105, 23);
+		contentPane.add(btnAddNew);
+		
+		JButton btnSaveNew = new JButton("Save New");
+		btnSaveNew.setEnabled(false);
+		btnSaveNew.setBounds(481, 45, 105, 23);
+		contentPane.add(btnSaveNew);
+		
+		JButton btnRefresh = new JButton("Refresh");
+
+		btnRefresh.setBounds(481, 124, 105, 23);
+		contentPane.add(btnRefresh);
+		
+		JButton btnUpdateSelected = new JButton("Update Selected");
+		btnUpdateSelected.setBounds(337, 11, 134, 23);
+		contentPane.add(btnUpdateSelected);
+		
+		JButton btnSaveSelected = new JButton("Save Selected");
+		btnSaveSelected.setEnabled(false);
+		btnSaveSelected.setBounds(337, 45, 134, 23);
+		contentPane.add(btnSaveSelected);
+		
+		JButton btnDelete = new JButton("Delete");
+		btnDelete.setBounds(481, 79, 105, 23);
+		contentPane.add(btnDelete);
+		
+		JLabel bname_label = new JLabel("Business Name");
+		bname_label.setBounds(10, 15, 114, 14);
+		contentPane.add(bname_label);
+		
+		JLabel bemail_label = new JLabel("Business Email");
+		bemail_label.setBounds(10, 49, 114, 14);
+		contentPane.add(bemail_label);
+		
+		JLabel bnumber_label = new JLabel("Business Number");
+		bnumber_label.setBounds(10, 83, 114, 14);
+		contentPane.add(bnumber_label);
+		
+		bname_textfield = new JTextField();
+		bname_textfield.setEnabled(false);
+		bname_textfield.setBounds(134, 12, 120, 20);
+		contentPane.add(bname_textfield);
+		bname_textfield.setColumns(10);
+		
+		bemail_textfield = new JTextField();
+		bemail_textfield.setEnabled(false);
+		bemail_textfield.setBounds(134, 46, 120, 20);
+		contentPane.add(bemail_textfield);
+		bemail_textfield.setColumns(10);
+		
+		bnumber_textfield = new JTextField();
+		bnumber_textfield.setEnabled(false);
+		bnumber_textfield.setBounds(134, 80, 120, 20);
+		contentPane.add(bnumber_textfield);
+		bnumber_textfield.setColumns(10);
+		
+		// Event Handlers
+		
+		bContactsDataTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				bname_textfield.setText(bContactsDataTable.getValueAt(bContactsDataTable.getSelectedRow(), 1).toString());
+				bemail_textfield.setText(bContactsDataTable.getValueAt(bContactsDataTable.getSelectedRow(), 2).toString());
+				bnumber_textfield.setText(bContactsDataTable.getValueAt(bContactsDataTable.getSelectedRow(), 3).toString());
+
+			}
+		});
+		
+		btnRefresh.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				bContactsDataTable.setModel(DbUtils.resultSetToTableModel(DbConn.getBContacts()));
+				
+			}
+		});
+		
+		btnAddNew.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				btnAddNew.setEnabled(false);
+				btnSaveNew.setEnabled(true);
+				btnDelete.setEnabled(false);
+				btnUpdateSelected.setEnabled(false);
+				btnSaveSelected.setEnabled(false);
+				bname_textfield.setEnabled(true);
+				bemail_textfield.setEnabled(true);
+				bnumber_textfield.setEnabled(true);
+				bname_textfield.setText("");
+				bemail_textfield.setText("");
+				bnumber_textfield.setText("");
+				
+				
+			}
+		});
+		
+		btnSaveNew.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				String bName = bname_textfield.getText();
+				String bEmail = bemail_textfield.getText();
+				String bNumber = bnumber_textfield.getText();
+				DbConn.insertBContacts(bName, bEmail, bNumber);
+				
+				btnAddNew.setEnabled(true);
+				btnSaveNew.setEnabled(false);
+				btnDelete.setEnabled(true);
+				btnUpdateSelected.setEnabled(true);
+				btnSaveSelected.setEnabled(false);
+				bname_textfield.setEnabled(false);
+				bemail_textfield.setEnabled(false);
+				bnumber_textfield.setEnabled(false);
+				
+				bContactsDataTable.setModel(DbUtils.resultSetToTableModel(DbConn.getBContacts()));
+				
+			}
+		});
+		
+		btnUpdateSelected.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) 
+			{
+				btnAddNew.setEnabled(false);
+				btnSaveNew.setEnabled(false);
+				btnDelete.setEnabled(false);
+				btnUpdateSelected.setEnabled(false);
+				btnSaveSelected.setEnabled(true);
+				bname_textfield.setEnabled(true);
+				bemail_textfield.setEnabled(true);
+				bnumber_textfield.setEnabled(true);
+				
+			}
+		});
+		
+		btnSaveSelected.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e)
+			{
+				String bName = bContactsDataTable.getValueAt(bContactsDataTable.getSelectedRow(), 1).toString();
+				String bEmail = bContactsDataTable.getValueAt(bContactsDataTable.getSelectedRow(), 2).toString();
+				String bNumber = bContactsDataTable.getValueAt(bContactsDataTable.getSelectedRow(), 3).toString();
+				String id = bContactsDataTable.getValueAt(bContactsDataTable.getSelectedRow(), 0).toString();
+				
+				bName = bname_textfield.getText();
+				bEmail = bemail_textfield.getText();
+				bNumber = bnumber_textfield.getText();
+
+				DbConn.updateBContacts(bName, bEmail, bNumber, id);
+				btnAddNew.setEnabled(true);
+				btnSaveNew.setEnabled(false);
+				btnDelete.setEnabled(true);
+				btnUpdateSelected.setEnabled(true);
+				btnSaveSelected.setEnabled(false);
+				bname_textfield.setEnabled(false);
+				bemail_textfield.setEnabled(false);
+				bnumber_textfield.setEnabled(false);
+				
+				bContactsDataTable.setModel(DbUtils.resultSetToTableModel(DbConn.getBContacts()));
+
+				
+			}
+		});
+		
+		
+	}
+	
+	
+	
+
+
+}

@@ -1,0 +1,65 @@
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class DbConn {
+	String ConnString = "jdbc:mysql://db509it.cdqlst5meygv.us-east-1.rds.amazonaws.com/HarrisContactDb";
+	String username = "admin";
+	String password = "Cultivate01!";
+	Connection conn = null;
+	
+	public DbConn()
+	{
+		try {
+			conn = DriverManager.getConnection(ConnString, username, password);
+			System.out.println("Connected to Database");
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("Not Connected");
+		}
+		
+	}
+	public ResultSet getPContacts() 
+	{
+		ResultSet setResult = null;
+		String sql = "CALL selectPersonalContacts();";
+		try {
+			CallableStatement callStatement = conn.prepareCall(sql);
+			setResult = callStatement.executeQuery();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return setResult;
+	}
+	
+	public void updatePContacts(
+			String firstName, 
+			String lastName,
+			String cEmail,
+			String cNumber,
+			String pNumber, 
+			String fAddress,
+			String sAddress, 
+			String city,
+			String postcode,
+			int id)
+	{
+
+		String sql = "CALL insertPersonalContacts();";
+		try {
+			CallableStatement callStatement = conn.prepareCall(sql);
+			ResultSet setResult = callStatement.executeQuery();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+	}
+	
+	
+}

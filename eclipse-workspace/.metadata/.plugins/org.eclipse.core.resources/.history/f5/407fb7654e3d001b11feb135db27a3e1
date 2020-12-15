@@ -1,0 +1,77 @@
+import java.awt.BorderLayout;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JButton;
+
+public class BusinessEditor extends JFrame {
+
+	private JPanel contentPane;
+	private JTable bContactsDataTable;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					BusinessEditor frame = new BusinessEditor();
+					frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the frame.
+	 */
+	public BusinessEditor() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setBounds(100, 100, 596, 339);
+		contentPane = new JPanel();
+		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+		setContentPane(contentPane);
+		contentPane.setLayout(null);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBounds(10, 158, 560, 131);
+		contentPane.add(scrollPane);
+		
+		bContactsDataTable = new JTable();
+		scrollPane.setRowHeaderView(bContactsDataTable);
+		
+		JButton btnAddNew = new JButton("Add New");
+		btnAddNew.setBounds(481, 11, 89, 23);
+		contentPane.add(btnAddNew);
+		
+		JButton btnSaveNew = new JButton("Save New");
+		btnSaveNew.setEnabled(false);
+		btnSaveNew.setBounds(481, 45, 89, 23);
+		contentPane.add(btnSaveNew);
+		
+		JButton btnRefresh = new JButton("Refresh");
+		btnRefresh.setBounds(481, 124, 89, 23);
+		contentPane.add(btnRefresh);
+		
+		JButton btnUpdateSelected = new JButton("Update Selected");
+		btnUpdateSelected.setBounds(337, 11, 134, 23);
+		contentPane.add(btnUpdateSelected);
+		
+		JButton btnSaveSelected = new JButton("Save Selected");
+		btnSaveSelected.setEnabled(false);
+		btnSaveSelected.setBounds(337, 45, 134, 23);
+		contentPane.add(btnSaveSelected);
+		
+		JButton btnDelete = new JButton("Delete");
+		btnDelete.setBounds(481, 79, 89, 23);
+		contentPane.add(btnDelete);
+	}
+
+}
