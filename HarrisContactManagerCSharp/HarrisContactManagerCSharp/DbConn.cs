@@ -6,6 +6,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+/* COMMENTED BY JOSIAH-ANYINSAH-BONDZIE
+ * A LOT OF THE PROCEEDURES ARE THE SAME SO I WILL NOT REPEAT COMMENTING ON METHODS THAT HAVE ALREADY BEEN COMMENTED OR ARE THE SAME
+ */
+
+
 
 
 namespace HarrisContactManagerCSharp
@@ -21,19 +26,22 @@ namespace HarrisContactManagerCSharp
             using (var conn = new MySqlConnection(sConn)) /* this passes the database information stored in the string and passes it
              to the database connector mysqlConnection */
             {
-                conn.Open();
-                DataTable dtPersonalContacts = new DataTable();
-                List<PersonalContacts> pContact = new List<PersonalContacts>();
-                using (var callCommand = new MySqlCommand("CALL selectPersonalContacts();", conn))
+                conn.Open(); //open connection to mysql server
+                DataTable dtPersonalContacts = new DataTable(); // new datatable 
+                List<PersonalContacts> pContact = new List<PersonalContacts>(); // Create a new list pCOontact that can access the attributes in the personalcontacts class
+                using (var callCommand = new MySqlCommand("CALL selectPersonalContacts();", conn)) // calling the sql query commmand andcreating a method of what happens when called
                 {
-                    using (var reader = callCommand.ExecuteReader())
+                    using (var reader = callCommand.ExecuteReader()) // called to retrieve and read the data from the sql database from first to last
                     {
-                        while (reader.Read())
+                        while (reader.Read()) //once table is retrieved from first to last in sql database,
                         {
-                            pContact.Add(new PersonalContacts
+                            pContact.Add(new PersonalContacts // Here we call the pContact object to assign the objects of the contacts class to the paramaters in the db table
                             {
-                                ContactID = reader.GetInt32(0),
-                                cFirstName = reader.GetString(1),
+                                /* The code below will retrieve the data of the table cells at index 0-9
+                                 * 
+                                 */
+                                ContactID = reader.GetInt32(0), 
+                                cFirstName = reader.GetString(1), 
                                 cSecondName = reader.GetString(2),
                                 cEmail = reader.GetString(3),
                                 cContactTel = reader.GetString(4),
@@ -50,6 +58,10 @@ namespace HarrisContactManagerCSharp
                     }
 
                 }
+                /*
+                 * The block of code adds coloumns of the parameters above into the datatable in the application.
+                 * 
+                 */
 
                 dtPersonalContacts.Columns.Add("ContactID");
                 dtPersonalContacts.Columns.Add("cFirstName");
@@ -63,10 +75,16 @@ namespace HarrisContactManagerCSharp
                 dtPersonalContacts.Columns.Add("aPostCode");
 
 
-                foreach (var item in pContact)
+                foreach (var item in pContact) //item uses to determine the values in each cell of data in the datatable.
+                    /*
+                     * A variable called row is defined and given the value of a new role in the datatable.
+                     * item represents the stored information for each column, in which the row being created receives the items representing the row
+                     * in the database.
+                     * 
+                     */
                 {
                     var row = dtPersonalContacts.NewRow();
-                    row["ContactID"] = item.ContactID;
+                    row["ContactID"] = item.ContactID; 
                     row["cFirstName"] = item.cFirstName;
                     row["cSecondName"] = item.cSecondName;
                     row["cEmail"] = item.cEmail;
@@ -86,13 +104,19 @@ namespace HarrisContactManagerCSharp
 
             }
 
-        public async void insertPContacts(PersonalContacts personalContact)
+        public async void insertPContacts(PersonalContacts personalContact) // create an asynchronous method which we call the class and create an object which can access the attributes of the class
+
         {
             using (var conn = new MySqlConnection(sConn))
             {
                 await conn.OpenAsync();
                 using (var callCommand = new MySqlCommand())
                 {
+                    /* After establishing a connection to the mysql server,
+                     * We pass the sql command insertIntoPersonal with the paramater we created with the command in HeidiSQL
+                     * The paramaters are set to the initial parameters we called in reading the databae in the datagridview
+                     * 
+                     */
                     callCommand.Connection = conn;
                     callCommand.CommandText = "CALL insertIntoPersonal(@p1,@p2,@p3,@p4,@p5,@p6,@p7,@p8,@p9);";
                     callCommand.Parameters.AddWithValue("p1", personalContact.cFirstName);
@@ -104,7 +128,7 @@ namespace HarrisContactManagerCSharp
                     callCommand.Parameters.AddWithValue("p7", personalContact.pAddress2);
                     callCommand.Parameters.AddWithValue("p8", personalContact.pCity);
                     callCommand.Parameters.AddWithValue("p9", personalContact.aPostCode);
-                    await callCommand.ExecuteNonQueryAsync();
+                    await callCommand.ExecuteNonQueryAsync(); //execute query/command.
                 }
 
             }
@@ -116,6 +140,11 @@ namespace HarrisContactManagerCSharp
             {
                 await conn.OpenAsync();
                 using (var callCommand = new MySqlCommand())
+                    /*
+                     * The difference between this method and the insertIntoPersonalContacts();
+                     *  is that we pass through the "first" paramater ID so that the seleted row identified can be changed when the information is matched to the ID of that row
+                     *  Taking a look at Heidi SQL will show this.
+                     */ 
                 {
                     callCommand.Connection = conn;
                     callCommand.CommandText = "CALL updatePersonalContacts(@p1,@p2,@p3,@p4,@p5,@p6,@p7,@p8,@p9,@p10);";
@@ -141,6 +170,11 @@ namespace HarrisContactManagerCSharp
                 await conn.OpenAsync();
                 using (var callCommand = new MySqlCommand())
                 {
+                    /* 
+                     * The difference between this method and the rest is that only the selected row ID is passed, which will be used to delete 
+                     * the row from the table.
+                     * 
+                     */
                     callCommand.Connection = conn;
                     callCommand.CommandText = "CALL deletePersonalContacts(@p1);";
                     callCommand.Parameters.AddWithValue("p1", ID);
@@ -148,6 +182,13 @@ namespace HarrisContactManagerCSharp
                 }
 
             }
+
+            /* 
+             * Below is the business contacts. However the same method used to read, edit, add and delete data from the table is the same
+             * here. 
+             * So I will not repeat the explanation here.
+             * 
+             */
         }
 
 
